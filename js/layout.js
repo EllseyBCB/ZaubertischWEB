@@ -34,9 +34,8 @@ function footerHTML() {
     <div>
       <div class="foot-brand">Zaubertisch</div>
       <p class="foot-legal">
-        Bereitgestellt von Alpha Blueprint Management and Consulting – FZCO.
-        Impressum, Datenschutz und AGB findest du in der App unter
-        „Einstellungen → Rechtliches".
+        Bereitgestellt von Alpha Blueprint Management and Consulting – FZCO,
+        Dubai (VAE). Kontakt: <a href="mailto:info@alphablueprint.de">info@alphablueprint.de</a>
       </p>
     </div>
     <div class="foot-links">
@@ -45,6 +44,11 @@ function footerHTML() {
       <a href="anleitung.html">Anleitung</a>
       <a href="download.html">Download</a>
       <a data-cta="play" role="button">Im Browser spielen</a>
+    </div>
+    <div class="foot-links">
+      <a href="impressum.html">Impressum</a>
+      <a href="datenschutz.html">Datenschutz</a>
+      <a href="nutzungsbedingungen.html">Nutzungsbedingungen</a>
     </div>
   </div>`;
 }
