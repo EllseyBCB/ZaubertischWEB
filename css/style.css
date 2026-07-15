@@ -214,6 +214,13 @@ section { padding: 64px 0; }
 .feature h3 { font-size: 1.2rem; margin-bottom: 8px; color: var(--gold); }
 .feature p { color: var(--muted); font-size: .96rem; }
 
+/* Vollständiges Banner-Bild (nicht beschnitten – kompletter Stern sichtbar). */
+.banner-full {
+  width: 100%; height: auto; display: block;
+  border-radius: 20px; border: 1px solid var(--goldsoft);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .4);
+}
+
 /* ---------- Shop-Schaufenster ---------- */
 .shop { position: relative; }
 .shop-hero-band {
