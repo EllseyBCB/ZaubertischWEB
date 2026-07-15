@@ -92,9 +92,45 @@ h1, h2, h3 { font-family: var(--font-myth); font-weight: 700; line-height: 1.2; 
 .brand { display: flex; align-items: center; gap: 10px; font-family: var(--font-myth); font-size: 1.15rem; }
 .brand img { width: 34px; height: 34px; border-radius: 8px; }
 .nav { margin-left: auto; display: flex; gap: 22px; align-items: center; }
-.nav a { color: var(--text); font-size: .95rem; }
+.nav a { color: var(--text); font-size: .95rem; position: relative; }
 .nav a:hover { color: var(--gold); text-decoration: none; }
-@media (max-width: 640px) { .nav { gap: 14px; } .nav a.nav-hide { display: none; } }
+.nav a.active { color: var(--gold); }
+.nav a.active::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--goldsoft), transparent);
+}
+.nav-toggle {
+  display: none; margin-left: auto; background: rgba(255,255,255,.08);
+  color: var(--text); border: 1px solid var(--rand); border-radius: 10px;
+  font-size: 1.3rem; width: 44px; height: 40px; cursor: pointer;
+}
+@media (max-width: 720px) {
+  .nav-toggle { display: block; }
+  .nav {
+    position: absolute; top: 62px; left: 0; right: 0; margin: 0;
+    flex-direction: column; align-items: stretch; gap: 0;
+    background: rgba(10,7,22,.97); border-bottom: 1px solid var(--rand);
+    max-height: 0; overflow: hidden; transition: max-height .25s ease;
+    backdrop-filter: blur(10px);
+  }
+  .nav.open { max-height: 380px; }
+  .nav a { padding: 14px 20px; border-top: 1px solid var(--rand); font-size: 1.05rem; }
+  .nav a.active::after { display: none; }
+}
+
+/* Übersichtskacheln auf der Startseite */
+.home-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }
+.home-card {
+  display: block; background: var(--karte); border: 1px solid var(--rand);
+  border-radius: 18px; overflow: hidden; color: var(--text);
+  transition: border-color .2s, transform .12s; text-decoration: none;
+}
+.home-card:hover { border-color: var(--goldsoft); transform: translateY(-3px); text-decoration: none; }
+.home-card .hc-media { aspect-ratio: 16 / 9; background: #140e2e center / cover no-repeat; }
+.home-card .hc-body { padding: 20px 20px 22px; }
+.home-card h3 { color: var(--gold); font-size: 1.25rem; margin-bottom: 6px; }
+.home-card p { color: var(--muted); font-size: .95rem; }
+.home-card .hc-arrow { color: var(--akzent); font-weight: 700; margin-top: 12px; display: inline-block; }
 
 /* ---------- Buttons ---------- */
 .btn {

@@ -33,4 +33,5 @@ export function initCTAs() {
   document.querySelectorAll('[data-cta="play"]').forEach(wirePlay);
 }
 
-document.addEventListener('DOMContentLoaded', initCTAs);
+// Auto-Start entfällt: layout.js ruft initCTAs() auf, nachdem Header/Footer
+// eingefügt sind (sonst wären die Buttons in der injizierten Fußzeile noch nicht da).
