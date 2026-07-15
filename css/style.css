@@ -238,6 +238,9 @@ section { padding: 64px 0; }
   width: 100%; padding: 26px 24px;
   background: linear-gradient(180deg, transparent, rgba(8, 5, 18, .88));
 }
+/* Größere Variante: zeigt deutlich mehr vom Bild */
+.shop-hero-band--big { min-height: 460px; background-position: center 32%; }
+@media (max-width: 640px) { .shop-hero-band--big { min-height: 300px; } }
 .shop-note {
   display: inline-flex; align-items: center; gap: 8px;
   background: var(--akzent-weich); color: #ddd0ff; border: 1px solid rgba(167, 139, 250, .4);
