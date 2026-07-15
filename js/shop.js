@@ -119,7 +119,11 @@ export function renderShowcase(rootId = 'shop-showcase') {
     back:   'Deine persönliche Kartenrückseite.',
   };
   for (const sec of SHOP_SECTIONS) {
-    parts.push(block(sec.title, subtitles[sec.key] || '', sec.items.map(catalogTile).join('')));
+    // Nur ECHTE Artikel zeigen: solche mit hinterlegter Grafik. Platzhalter
+    // (nur Emoji, noch keine echte Ware im Original-Shop) werden ausgeblendet.
+    const items = sec.items.filter(it => it.img);
+    if (!items.length) continue;
+    parts.push(block(sec.title, subtitles[sec.key] || '', items.map(catalogTile).join('')));
   }
 
   // 3) Truhen (Loot)
