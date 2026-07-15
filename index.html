@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zaubertisch – Das magische Stich-Kartenspiel</title>
+  <meta name="description" content="Zaubertisch: Das magische Stich- und Ansage-Kartenspiel. Solo gegen KI oder online mit Freunden. Jetzt im Browser spielen – bald im App Store.">
+  <meta name="theme-color" content="#100a22">
+  <link rel="icon" href="assets/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="#top">
+        <img src="assets/icons/icon-192.png" alt="Zaubertisch-Icon">
+        <span class="goldtext">Zaubertisch</span>
+      </a>
+      <nav class="nav">
+        <a href="#features" class="nav-hide">Features</a>
+        <a href="#shop">Shop</a>
+        <a href="anleitung.html">Anleitung</a>
+        <a href="#download">Download</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="download">
+      <div class="hero-media" aria-hidden="true"></div>
+      <div class="wrap">
+        <span class="eyebrow">Stich- &amp; Ansage-Kartenspiel</span>
+        <h1 class="goldtext">Zaubertisch</h1>
+        <p class="lead">
+          Sag deine Stiche an, bezwinge Zauberer und Narren und werde Meister am
+          magischen Tisch – <strong>solo gegen clevere KI</strong> oder
+          <strong>online mit Freunden</strong>.
+        </p>
+        <div class="hero-cta">
+          <a class="btn btn-store is-soon" data-cta="appstore" role="button" aria-disabled="true">
+            <span class="store-small"></span>
+            <span class="store-big" data-cta-label>Bald im App Store</span>
+          </a>
+          <a class="btn btn-primary" data-cta="play" role="button">▶ Jetzt im Browser spielen</a>
+        </div>
+        <p class="store-hint">Die iOS-App befindet sich in der Fertigstellung. Im Browser kannst du sofort loslegen.</p>
+        <div class="hero-badges">
+          <span>🧙 Solo gegen KI</span>
+          <span>🌐 Online mit Freunden</span>
+          <span>🎴 60 magische Karten</span>
+          <span>💎 Sammeln &amp; Anpassen</span>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ============ FEATURES ============ -->
+    <section id="features">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 class="goldtext">Was dich erwartet</h2>
+          <p>Ein klassisches Stichspiel im magischen Gewand – mit allem, was Sammlerherzen höherschlagen lässt.</p>
+        </div>
+        <div class="features">
+          <div class="feature"><div class="f-ic">🧙</div><h3>Solo gegen KI</h3><p>Spiel jederzeit offline gegen clevere Computer-Gegner in unterschiedlichen Stärken.</p></div>
+          <div class="feature"><div class="f-ic">🌐</div><h3>Online mit Freunden</h3><p>Jeder am eigenen Gerät, in Echtzeit am selben Tisch – server-autoritativ und fair.</p></div>
+          <div class="feature"><div class="f-ic">🎴</div><h3>Kartendecks &amp; Rückseiten</h3><p>Wechsle das Motiv deines Blatts – von Elemente über Mythos bis Galaxie.</p></div>
+          <div class="feature"><div class="f-ic">🏰</div><h3>Magische Spielfelder</h3><p>Verwandle den Tisch in Zauberwald, Kristallhöhle, Eispalast und mehr.</p></div>
+          <div class="feature"><div class="f-ic">💎</div><h3>Kristalle &amp; Truhen</h3><p>Sammle Kristalle, öffne Truhen und schalte Avatare, Decks und Tische frei.</p></div>
+          <div class="feature"><div class="f-ic">🔔</div><h3>Sound, Haptik &amp; Konfetti</h3><p>Stimmungsvolle Musik, Vibration und eine „du bist dran"-Benachrichtigung.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ============ SHOP-SCHAUFENSTER ============ -->
+    <section id="shop" class="shop">
+      <div class="wrap">
+        <div class="shop-hero-band">
+          <div class="band-inner">
+            <span class="shop-note">🔒 In der App erhältlich</span>
+          </div>
+        </div>
+        <div class="section-head">
+          <h2 class="goldtext">Der magische Shop</h2>
+          <p>Alle Inhalte des In-Game-Shops auf einen Blick. Freigeschaltet wird direkt im Spiel – Kristalle als Premium-Währung erhältst du in der App.</p>
+        </div>
+        <!-- Wird von js/shop.js aus der Original-Datenquelle (shop-catalog.js) gefüllt -->
+        <div id="shop-showcase"></div>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ============ ANLEITUNG-TEASER ============ -->
+    <section id="regeln">
+      <div class="wrap">
+        <div class="rules-teaser">
+          <h2 class="goldtext">So spielt man Zaubertisch</h2>
+          <ul>
+            <li>60 Karten: 1–13 in vier Farben, dazu 4 Zauberer und 4 Narren.</li>
+            <li>Die Kartenzahl steigt jede Runde – ab der Hälfte sinkt sie wieder bis auf eine einzige Karte. Eine aufgedeckte Karte bestimmt den Trumpf.</li>
+            <li>Sage vorher <strong>genau</strong> an, wie viele Stiche du holst.</li>
+            <li>Angespielte Farbe muss bedient werden. <strong>Zauberer gewinnt immer, Narr verliert immer.</strong></li>
+            <li>Ansage exakt getroffen: 20 + 10 je Stich. Daneben: −10 je Stich Differenz.</li>
+          </ul>
+          <a class="btn btn-gold" href="anleitung.html">📖 Zur ausführlichen Anleitung</a>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ============ ABSCHLUSS-CTA ============ -->
+    <section class="cta-band">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 class="goldtext">Bereit für den ersten Stich?</h2>
+          <p>Spiel sofort im Browser – oder hol dir bald die App fürs iPhone.</p>
+        </div>
+        <div class="hero-cta">
+          <a class="btn btn-store is-soon" data-cta="appstore" role="button" aria-disabled="true">
+            <span class="store-small"></span>
+            <span class="store-big" data-cta-label>Bald im App Store</span>
+          </a>
+          <a class="btn btn-primary" data-cta="play" role="button">▶ Jetzt im Browser spielen</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div>
+        <div class="foot-brand">Zaubertisch</div>
+        <p class="foot-legal">
+          Bereitgestellt von Alpha Blueprint Management and Consulting – FZCO.
+          Impressum, Datenschutz und AGB findest du in der App unter
+          „Einstellungen → Rechtliches".
+        </p>
+      </div>
+      <div class="foot-links">
+        <a href="anleitung.html">Spielanleitung</a>
+        <a href="#shop">Shop</a>
+        <a data-cta="play" role="button">Im Browser spielen</a>
+        <a href="#download">Download</a>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="js/config.js"></script>
+  <script type="module" src="js/cta.js"></script>
+  <script type="module" src="js/shop.js"></script>
+</body>
+</html>
