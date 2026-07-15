@@ -211,6 +211,11 @@ section { padding: 64px 0; }
 }
 .feature:hover { border-color: var(--goldsoft); transform: translateY(-3px); }
 .feature .f-ic { font-size: 2rem; margin-bottom: 12px; }
+.feature .f-ic-img {
+  width: 76px; height: 76px; object-fit: contain; display: block;
+  margin-bottom: 12px;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, .45));
+}
 .feature h3 { font-size: 1.2rem; margin-bottom: 8px; color: var(--gold); }
 .feature p { color: var(--muted); font-size: .96rem; }
 
