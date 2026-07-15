@@ -12,6 +12,9 @@ const esc = (s) => String(s == null ? '' : s)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
   .replace(/"/g, '&quot;');
 
+// Gemaltes Kristall-Symbol (ersetzt das 💎-Emoji in den Preisen).
+const CRYSTAL = '<img class="crystal-ic" src="assets/icons/kristall.png" alt="Kristalle">';
+
 // Seltenheits-Badge (Farbe + Label aus dem Katalog).
 function rarityBadge(rarity) {
   const r = RARITY[rarity];
@@ -22,7 +25,7 @@ function rarityBadge(rarity) {
 // Kristall-Preis-Zeile (In-Game-Währung).
 function crystalCost(cost, free) {
   if (free || cost === 0) return `<span class="cost cost-free">Gratis</span>`;
-  return `<span class="cost"><span class="crystal">💎</span>${Number(cost).toLocaleString('de-DE')}</span>`;
+  return `<span class="cost">${CRYSTAL}${Number(cost).toLocaleString('de-DE')}</span>`;
 }
 
 // Bild ODER Emoji-Fallback (wie im Spiel): fehlt/lädt das Bild nicht, wird das
@@ -63,11 +66,11 @@ function packTile(p) {
     <div class="tile-thumb">
       <img class="thumb-img" src="${esc(src)}" alt="${esc(p.amount)} Kristalle" loading="lazy"
         onerror="this.remove();this.parentNode.querySelector('.thumb-emoji').style.display='flex'">
-      <span class="thumb-emoji thumb-emoji-hidden" aria-hidden="true">💎</span>
+      <span class="thumb-emoji thumb-emoji-hidden" aria-hidden="true">${CRYSTAL}</span>
     </div>
     <div class="tile-body">
       <div class="tile-name">${Number(p.amount).toLocaleString('de-DE')} Kristalle</div>
-      <div class="pack-total">${bonus}<span class="pack-sum">= ${total.toLocaleString('de-DE')} 💎</span></div>
+      <div class="pack-total">${bonus}<span class="pack-sum">= ${total.toLocaleString('de-DE')} ${CRYSTAL}</span></div>
       <div class="tile-meta"><span class="price">${esc(p.priceEUR)}</span></div>
     </div>
   </li>`;
