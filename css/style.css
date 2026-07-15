@@ -304,6 +304,7 @@ section { padding: 64px 0; }
   padding: 4px 9px; border-radius: 999px; text-transform: uppercase; letter-spacing: .04em;
 }
 .tile-chest .tile-thumb { background: radial-gradient(120% 120% at 50% 30%, color-mix(in srgb, var(--rar) 30%, #1b1340) 0%, #140e2e 100%); }
+.chest-img { object-fit: contain; padding: 12%; filter: drop-shadow(0 6px 14px rgba(0, 0, 0, .55)); }
 
 /* ---------- Anleitung-Teaser ---------- */
 .rules-teaser {

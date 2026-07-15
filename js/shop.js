@@ -80,7 +80,11 @@ function packTile(p) {
 function chestTile(c) {
   return `
   <li class="tile tile-chest" style="--rar:${c.color}">
-    <div class="tile-thumb"><span class="thumb-emoji chest-emoji" aria-hidden="true">${esc(c.emoji)}</span></div>
+    <div class="tile-thumb">
+      <img class="thumb-img chest-img" src="assets/icons/chest-${esc(c.rarity)}.png" alt="${esc(c.label)}" loading="lazy"
+        onerror="this.remove();this.parentNode.querySelector('.thumb-emoji').style.display='flex'">
+      <span class="thumb-emoji chest-emoji thumb-emoji-hidden" aria-hidden="true">${esc(c.emoji)}</span>
+    </div>
     <div class="tile-body">
       <div class="tile-name">${esc(c.label)}</div>
       <div class="tile-meta">${crystalCost(c.price)}</div>
