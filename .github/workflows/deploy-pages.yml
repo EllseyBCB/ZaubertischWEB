@@ -1,0 +1,43 @@
+name: Deploy to GitHub Pages
+
+# Deployt die statische Seite (Repo-Wurzel) auf GitHub Pages.
+# configure-pages mit enablement:true schaltet Pages beim ersten Lauf automatisch
+# ein – es ist kein manuelles Aktivieren in den Repo-Einstellungen nötig.
+
+on:
+  push:
+    branches: [claude/game-website-shop-setup-as6h8v]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure Pages (aktiviert Pages automatisch)
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Upload site artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
