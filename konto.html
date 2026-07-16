@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Konto – Zaubertisch</title>
+  <meta name="description" content="Melde dich bei Zaubertisch an und sieh dein Kristall-Guthaben – dasselbe Konto wie im Spiel.">
+  <meta name="theme-color" content="#100a22">
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="assets/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="assets/icons/icon-1024.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="css/style.css?v=4">
+</head>
+<body data-page="konto">
+  <header class="site-header" id="site-header"></header>
+
+  <main>
+    <section class="guide-hero">
+      <div class="wrap">
+        <span class="eyebrow">Konto</span>
+        <h1 class="goldtext">Anmelden</h1>
+        <p>Melde dich mit deinem Zaubertisch-Konto an – es ist dasselbe wie im Spiel.
+        Dein Kristall-Guthaben ist überall gleich.</p>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <div class="account-wrap" id="account-page">
+        <!-- js/auth.js füllt hier je nach Login-Status Formular oder Guthaben ein -->
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer" id="site-footer"></footer>
+
+  <script type="module" src="js/layout.js?v=4"></script>
+  <script type="module">
+    import { initAccountPage } from './js/auth.js';
+    initAccountPage();
+  </script>
+</body>
+</html>

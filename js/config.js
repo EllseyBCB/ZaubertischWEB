@@ -14,3 +14,15 @@ export const PLAY_URL = 'https://ellseybcb.github.io/WIZ-WIZ/';
 // Pfad vor die in shop-catalog.js hinterlegten (relativen) Bildpfade – so bleibt
 // shop-catalog.js unverändert und lässt sich jederzeit aus WIZ-WIZ neu kopieren.
 export const ASSET_BASE = 'assets/game/';
+
+// --- Supabase (gemeinsames Konto mit dem Spiel) -----------------------------
+// Trage hier dieselben Werte wie in der config.js des Spiels ein
+// (Supabase-Dashboard → Project Settings → API). Der anon/publishable Key ist
+// für den Client gedacht und durch Row Level Security geschützt (kein Geheimnis).
+// Solange diese Werte LEER sind, bleibt die Anmeldung auf der Website deaktiviert
+// (es erscheint kein „Anmelden"-Button, die Seite funktioniert normal weiter).
+export const SUPABASE_URL = '';       // z. B. 'https://deinprojekt.supabase.co'
+export const SUPABASE_ANON_KEY = '';  // z. B. 'sb_publishable_...'
+
+// True, sobald beide Supabase-Werte gesetzt sind.
+export const AUTH_CONFIGURED = !!(SUPABASE_URL && SUPABASE_ANON_KEY);

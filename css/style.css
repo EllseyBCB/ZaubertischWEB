@@ -365,6 +365,48 @@ section { padding: 64px 0; }
 .legal-page a { color: var(--akzent); word-break: break-word; }
 .legal-stand { color: var(--muted); font-size: .9rem; margin-top: 26px; font-style: italic; }
 
+/* ---------- Konto / Login ---------- */
+.account-slot { display: flex; align-items: center; }
+.btn-account {
+  display: inline-flex; align-items: center; gap: 8px; margin-left: 6px;
+  padding: 8px 14px; border-radius: 10px; font-weight: 700; font-size: .92rem;
+  color: #1a1033; background: var(--akzent); text-decoration: none; white-space: nowrap;
+}
+.btn-account:hover { filter: brightness(1.07); text-decoration: none; }
+.btn-account .acc-bal { display: inline-flex; align-items: center; gap: 3px; }
+.btn-account .crystal-ic { height: 1.2em; }
+@media (max-width: 720px) { .account-slot { position: absolute; right: 66px; top: 11px; } .btn-account { padding: 7px 12px; } }
+
+.account-wrap { max-width: 460px; margin: 0 auto; padding: 8px 0 40px; }
+.auth-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+.auth-tab {
+  flex: 1; padding: 12px; border-radius: 12px; cursor: pointer; font-weight: 700;
+  background: rgba(255,255,255,.06); color: var(--muted); border: 1px solid var(--rand);
+}
+.auth-tab.active { background: var(--akzent-weich); color: var(--akzent); border-color: rgba(167,139,250,.4); }
+.auth-card {
+  background: var(--karte); border: 1px solid var(--rand); border-radius: 18px;
+  padding: 24px 22px; display: flex; flex-direction: column; gap: 14px;
+}
+.auth-form label { display: flex; flex-direction: column; gap: 6px; font-size: .9rem; color: var(--muted); }
+.auth-form input {
+  padding: 12px 14px; border-radius: 10px; font-size: 1rem;
+  background: rgba(6,4,16,.55); border: 1px solid var(--rand); color: var(--text);
+}
+.auth-form input:focus { outline: none; border-color: var(--akzent); }
+.auth-msg { font-size: .9rem; margin: 0; min-height: 1.2em; }
+.auth-msg.err { color: #ff8a8a; }
+.auth-msg.ok { color: #7ee0a8; }
+.auth-note { font-size: .86rem; color: var(--muted); margin: 0; }
+.auth-hi { color: var(--text); }
+.wallet-box {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  background: rgba(6,4,16,.5); border: 1px solid var(--goldsoft); border-radius: 14px; padding: 16px 18px;
+}
+.wallet-label { color: var(--muted); font-size: .9rem; }
+.wallet-amount { display: inline-flex; align-items: center; gap: 6px; font-size: 1.5rem; font-weight: 800; color: var(--gold); }
+.wallet-amount .crystal-ic { height: 1.4em; }
+
 /* ---------- Footer ---------- */
 .site-footer { border-top: 1px solid var(--rand); margin-top: 40px; padding: 40px 0 60px; color: var(--muted); }
 .site-footer .wrap { display: flex; flex-wrap: wrap; gap: 24px; justify-content: space-between; align-items: flex-start; }

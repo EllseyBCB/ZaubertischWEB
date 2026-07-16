@@ -4,6 +4,7 @@
 // aktiven Menüpunkt. Menü-Änderungen also nur HIER pflegen.
 import { initCTAs } from './cta.js';
 import { PLAY_URL } from './config.js';
+import { mountAccountHeader } from './auth.js';
 
 const NAV = [
   { page: 'start',     href: 'index.html',     label: 'Start' },
@@ -25,6 +26,7 @@ function headerHTML(active) {
     </a>
     <button class="nav-toggle" id="nav-toggle" type="button" aria-label="Menü" aria-expanded="false">☰</button>
     <nav class="nav" id="nav">${links}</nav>
+    <div class="account-slot" id="account-slot"></div>
   </div>`;
 }
 
@@ -72,6 +74,9 @@ function mount() {
 
   // CTAs verdrahten (jetzt existiert auch der Footer-Play-Link).
   initCTAs();
+
+  // Konto-Button (nur aktiv, wenn Supabase in config.js hinterlegt ist).
+  try { mountAccountHeader(); } catch (_) {}
 }
 
 // PLAY_URL wird in initCTAs über config.js genutzt; Import hier nur, um die
