@@ -26,3 +26,13 @@ export const SUPABASE_ANON_KEY = 'sb_publishable_DGG2ulMkqrCUgUrwzy0KvQ_6pPlbqrq
 
 // True, sobald beide Supabase-Werte gesetzt sind.
 export const AUTH_CONFIGURED = !!(SUPABASE_URL && SUPABASE_ANON_KEY);
+
+// --- Echtgeld-Zahlungen (Phase 2: Kristalle mit Karte/Apple Pay + PayPal) ----
+// Erst auf true stellen, WENN die Supabase Edge Functions (create-checkout,
+// stripe-webhook, paypal-capture) deployt und die Secrets gesetzt sind
+// (siehe PHASE2-BEZAHLUNG-SETUP.md). Solange false, zeigen die Kristall-Pakete
+// keinen Kauf-Button (Seite bleibt unverändert/funktionsfähig).
+export const PAYMENTS_ENABLED = false;
+
+// Basis-URL der Supabase Edge Functions (aus SUPABASE_URL abgeleitet).
+export const FUNCTIONS_URL = SUPABASE_URL ? `${SUPABASE_URL}/functions/v1` : '';

@@ -10,6 +10,7 @@ import { ASSET_BASE, AUTH_CONFIGURED } from './config.js';
 import {
   hasStoredSession, refreshWallet, buyItem, buyChest, toast,
 } from './auth.js';
+import { startPackCheckout, handleReturn, paymentsEnabled } from './checkout.js';
 
 // Kaufzustand des angemeldeten Nutzers (für Kauf-Buttons).
 let loggedIn = false;
@@ -95,8 +96,19 @@ function packTile(p) {
       <div class="tile-name">${Number(p.amount).toLocaleString('de-DE')} Kristalle</div>
       <div class="pack-total">${bonus}<span class="pack-sum">= ${total.toLocaleString('de-DE')} ${CRYSTAL}</span></div>
       <div class="tile-meta"><span class="price">${esc(p.priceEUR)}</span></div>
+      ${packAction(p)}
     </div>
   </li>`;
+}
+
+// Kauf-Aktion für Kristall-Pakete (Echtgeld). Nur wenn Zahlungen aktiv sind.
+function packAction(p) {
+  if (!paymentsEnabled()) return '';
+  if (!loggedIn) return `<a class="btn-buy btn-buy-login" href="konto.html">Anmelden zum Kaufen</a>`;
+  return `<div class="pay-row">
+    <button class="btn-buy btn-pay-card" type="button" data-buy-pack="${esc(p.id)}" data-provider="stripe">Mit Karte</button>
+    <button class="btn-buy btn-pay-pp" type="button" data-buy-pack="${esc(p.id)}" data-provider="paypal">PayPal</button>
+  </div>`;
 }
 
 // Truhen-Kachel.
@@ -211,8 +223,10 @@ function wireRoot(rootId = 'shop-showcase') {
   root.addEventListener('click', (e) => {
     const itemBtn = e.target.closest('[data-buy-item]');
     const chestBtn = e.target.closest('[data-buy-chest]');
+    const packBtn = e.target.closest('[data-buy-pack]');
     if (itemBtn) { e.preventDefault(); doBuyItem(itemBtn); }
     else if (chestBtn) { e.preventDefault(); doBuyChest(chestBtn); }
+    else if (packBtn) { e.preventDefault(); startPackCheckout(packBtn.dataset.buyPack, packBtn.dataset.provider); }
   });
 }
 
@@ -231,6 +245,7 @@ function init() {
   renderShowcase();   // sofort (ausgeloggt-Zustand)
   wireRoot();
   loadWallet();       // bei aktiver Sitzung: Guthaben + Kauf-Buttons
+  try { handleReturn(); } catch (_) {}  // Rücksprung von Stripe/PayPal behandeln
 }
 
 if (document.readyState === 'loading') {
