@@ -87,7 +87,7 @@ export async function signOut() {
   try { await c.auth.signOut(); } catch (_) {}
 }
 
-// Kristall-Guthaben (+ gold) des angemeldeten Kontos lesen.
+// Kristall-Guthaben (+ gold + Besitz) des angemeldeten Kontos lesen.
 export async function fetchWallet() {
   const c = await getClient(); if (!c) return null;
   const { data, error } = await c.rpc('wizard_wallet');
@@ -95,6 +95,48 @@ export async function fetchWallet() {
   const row = Array.isArray(data) ? data[0] : data;
   if (!row) return null;
   return { crystals: row.crystals ?? 0, gold: row.gold ?? 0, inventory: row.inventory || [] };
+}
+
+// Zwischengespeichertes Guthaben (für Shop-Kacheln). Nach Änderungen wird das
+// Event 'wallet-updated' ausgelöst → Header + Shop aktualisieren sich.
+export let walletCache = null;
+export async function refreshWallet() {
+  walletCache = await fetchWallet();
+  try { window.dispatchEvent(new CustomEvent('wallet-updated', { detail: walletCache })); } catch (_) {}
+  return walletCache;
+}
+
+// --- Käufe MIT KRISTALLEN (server-autoritativ; Preise/Besitz prüft der Server) ---
+export async function buyItem(itemId) {
+  const c = await getClient(); if (!c) return { ok: false, message: 'nicht angemeldet' };
+  const { data, error } = await c.rpc('wizard_buy_item', { p_item_id: itemId });
+  if (error) return { ok: false, message: error.message };
+  const r = (Array.isArray(data) ? data[0] : data) || {};
+  if (typeof r.crystals === 'number') { walletCache = { ...(walletCache || {}), crystals: r.crystals, gold: r.gold ?? walletCache?.gold };
+    try { window.dispatchEvent(new CustomEvent('wallet-updated', { detail: walletCache })); } catch (_) {} }
+  return { ok: !!r.ok, crystals: r.crystals, message: r.message || (r.ok ? 'Gekauft' : 'Fehler') };
+}
+
+export async function buyChest(rarity) {
+  const c = await getClient(); if (!c) return { ok: false, message: 'nicht angemeldet' };
+  const { data, error } = await c.rpc('wizard_buy_chest', { p_rarity: rarity });
+  if (error) return { ok: false, message: error.message };
+  const r = (Array.isArray(data) ? data[0] : data) || {};
+  if (typeof r.crystals === 'number') { walletCache = { ...(walletCache || {}), crystals: r.crystals };
+    try { window.dispatchEvent(new CustomEvent('wallet-updated', { detail: walletCache })); } catch (_) {} }
+  return { ok: !!r.ok, crystals: r.crystals, message: r.message || (r.ok ? 'Truhe gekauft' : 'Fehler') };
+}
+
+// Kleine Toast-Meldung (kauf-Feedback).
+export function toast(msg, type = 'ok') {
+  let host = document.getElementById('toast-host');
+  if (!host) { host = document.createElement('div'); host.id = 'toast-host'; document.body.appendChild(host); }
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  el.textContent = msg;
+  host.appendChild(el);
+  requestAnimationFrame(() => el.classList.add('show'));
+  setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 300); }, 2800);
 }
 
 // Auf Login/Logout reagieren.
@@ -117,16 +159,19 @@ export async function mountAccountHeader() {
     slot.innerHTML = `<a class="btn-account" href="konto.html">Anmelden</a>`;
     return;
   }
+  const paint = (crystals) => {
+    const bal = (typeof crystals === 'number') ? `<span class="acc-bal">${CRYSTAL_IMG}${fmt(crystals)}</span>` : '';
+    slot.innerHTML = `<a class="btn-account" href="konto.html">${bal}<span class="acc-name">Konto</span></a>`;
+  };
   const render = async (user) => {
-    if (user) {
-      const w = await fetchWallet();
-      const bal = w ? `<span class="acc-bal">${CRYSTAL_IMG}${fmt(w.crystals)}</span>` : '';
-      slot.innerHTML = `<a class="btn-account" href="konto.html">${bal}<span class="acc-name">Konto</span></a>`;
-    } else {
-      slot.innerHTML = `<a class="btn-account" href="konto.html">Anmelden</a>`;
-    }
+    if (user) { const w = await refreshWallet(); paint(w ? w.crystals : undefined); }
+    else { slot.innerHTML = `<a class="btn-account" href="konto.html">Anmelden</a>`; }
   };
   onAuthChange(render);
+  // Nach einem Kauf: Guthaben im Header sofort aktualisieren.
+  window.addEventListener('wallet-updated', (e) => {
+    if (e.detail && typeof e.detail.crystals === 'number') paint(e.detail.crystals);
+  });
 }
 
 // --- Konto-Seite (konto.html ruft initAccountPage() auf) --------------------

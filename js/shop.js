@@ -6,7 +6,15 @@
 import {
   SHOP_SECTIONS, CRYSTAL_PACKS, RARITY, CHEST_TIERS,
 } from './shop-catalog.js';
-import { ASSET_BASE } from './config.js';
+import { ASSET_BASE, AUTH_CONFIGURED } from './config.js';
+import {
+  hasStoredSession, refreshWallet, buyItem, buyChest, toast,
+} from './auth.js';
+
+// Kaufzustand des angemeldeten Nutzers (für Kauf-Buttons).
+let loggedIn = false;
+let myCrystals = null;         // null = unbekannt/ausgeloggt
+let owned = new Set();         // besessene Katalog-Artikel (item_id)
 
 const esc = (s) => String(s == null ? '' : s)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -39,6 +47,20 @@ function thumb(item) {
           <span class="thumb-emoji thumb-emoji-hidden" aria-hidden="true">${esc(item.icon || '✨')}</span>`;
 }
 
+// Kauf-Aktion je nach Zustand (nur wenn Anmeldung aktiv). Rückgabe = HTML.
+//  free/Standard → „Gratis" · im Besitz → Badge · genug → Kaufen · zu wenig →
+//  deaktiviert · ausgeloggt → „Anmelden".
+function buyAction(item) {
+  if (!AUTH_CONFIGURED) return '';
+  if (item.free || item.cost === 0 || item.isDefault) return `<span class="owned-badge">Gratis</span>`;
+  if (!loggedIn) return `<a class="btn-buy btn-buy-login" href="konto.html">Anmelden zum Kaufen</a>`;
+  if (owned.has(item.id)) return `<span class="owned-badge">✓ Im Besitz</span>`;
+  if (myCrystals != null && myCrystals >= item.cost) {
+    return `<button class="btn-buy" type="button" data-buy-item="${esc(item.id)}">Kaufen</button>`;
+  }
+  return `<button class="btn-buy" type="button" disabled>Zu wenig</button>`;
+}
+
 // Eine Katalog-Kachel (Avatar/Deck/Spielfeld/Rückseite).
 function catalogTile(item) {
   return `
@@ -50,6 +72,7 @@ function catalogTile(item) {
         ${rarityBadge(item.rarity)}
         ${crystalCost(item.cost, item.free)}
       </div>
+      ${buyAction(item)}
     </div>
   </li>`;
 }
@@ -88,8 +111,19 @@ function chestTile(c) {
     <div class="tile-body">
       <div class="tile-name">${esc(c.label)}</div>
       <div class="tile-meta">${crystalCost(c.price)}</div>
+      ${chestAction(c)}
     </div>
   </li>`;
+}
+
+// Kauf-Aktion für Truhen (Truhen sind Verbrauchsware → immer kaufbar).
+function chestAction(c) {
+  if (!AUTH_CONFIGURED) return '';
+  if (!loggedIn) return `<a class="btn-buy btn-buy-login" href="konto.html">Anmelden zum Kaufen</a>`;
+  if (myCrystals != null && myCrystals >= c.price) {
+    return `<button class="btn-buy" type="button" data-buy-chest="${esc(c.rarity)}">Kaufen</button>`;
+  }
+  return `<button class="btn-buy" type="button" disabled>Zu wenig</button>`;
 }
 
 function block(title, subtitle, tilesHtml, extraClass = '') {
@@ -139,4 +173,68 @@ export function renderShowcase(rootId = 'shop-showcase') {
   root.innerHTML = parts.join('');
 }
 
-document.addEventListener('DOMContentLoaded', () => renderShowcase());
+// --- Kaufzustand laden + Klicks verdrahten ---------------------------------
+function applyWallet(w) {
+  loggedIn = !!w;
+  myCrystals = w ? w.crystals : null;
+  if (w && Array.isArray(w.inventory)) owned = new Set(w.inventory);
+}
+
+async function loadWallet() {
+  if (!AUTH_CONFIGURED || !hasStoredSession()) { loggedIn = false; myCrystals = null; return; }
+  applyWallet(await refreshWallet());  // löst 'wallet-updated' aus → Re-Render
+  renderShowcase();
+}
+
+async function doBuyItem(btn) {
+  const id = btn.dataset.buyItem;
+  btn.disabled = true; btn.textContent = '…';
+  const r = await buyItem(id);
+  toast(r.message, r.ok ? 'ok' : 'err');
+  if (r.ok) { owned.add(id); await refreshWallet(); }  // frisches Inventar/Guthaben
+  renderShowcase();
+}
+
+async function doBuyChest(btn) {
+  const rarity = btn.dataset.buyChest;
+  btn.disabled = true; btn.textContent = '…';
+  const r = await buyChest(rarity);
+  toast(r.message, r.ok ? 'ok' : 'err');
+  if (r.ok) await refreshWallet();
+  renderShowcase();
+}
+
+function wireRoot(rootId = 'shop-showcase') {
+  const root = document.getElementById(rootId);
+  if (!root || root.dataset.wired) return;
+  root.dataset.wired = '1';
+  root.addEventListener('click', (e) => {
+    const itemBtn = e.target.closest('[data-buy-item]');
+    const chestBtn = e.target.closest('[data-buy-chest]');
+    if (itemBtn) { e.preventDefault(); doBuyItem(itemBtn); }
+    else if (chestBtn) { e.preventDefault(); doBuyChest(chestBtn); }
+  });
+}
+
+// Guthaben-Änderungen (Header/Kauf) → Zustand übernehmen + neu rendern.
+window.addEventListener('wallet-updated', (e) => {
+  const w = e.detail;
+  if (w) {
+    loggedIn = true;
+    if (typeof w.crystals === 'number') myCrystals = w.crystals;
+    if (Array.isArray(w.inventory)) owned = new Set(w.inventory);
+    renderShowcase();
+  }
+});
+
+function init() {
+  renderShowcase();   // sofort (ausgeloggt-Zustand)
+  wireRoot();
+  loadWallet();       // bei aktiver Sitzung: Guthaben + Kauf-Buttons
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
