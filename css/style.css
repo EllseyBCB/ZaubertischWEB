@@ -388,6 +388,8 @@ section { padding: 64px 0; }
   background: var(--karte); border: 1px solid var(--rand); border-radius: 18px;
   padding: 24px 22px; display: flex; flex-direction: column; gap: 14px;
 }
+/* hidden-Attribut muss gegen display:flex der Karte gewinnen */
+.auth-form[hidden] { display: none; }
 .auth-form label { display: flex; flex-direction: column; gap: 6px; font-size: .9rem; color: var(--muted); }
 .auth-form input {
   padding: 12px 14px; border-radius: 10px; font-size: 1rem;

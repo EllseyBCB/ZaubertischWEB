@@ -7,20 +7,51 @@
 // (SECURITY DEFINER) geändert werden – der Browser darf es nur lesen.
 import { SUPABASE_URL, SUPABASE_ANON_KEY, AUTH_CONFIGURED } from './config.js';
 
-const SUPABASE_ESM = 'https://esm.sh/@supabase/supabase-js@2.110.0';
+// Supabase-Bibliothek liegt LOKAL im Repo (kein externer CDN zur Laufzeit) und
+// wird nur bei Bedarf geladen (siehe loadLib).
+const SUPABASE_LIB = 'assets/vendor/supabase.umd.js';
 
 let _client = null;
 let _clientPromise = null;
+let _libPromise = null;
 
 export function authConfigured() { return AUTH_CONFIGURED; }
+
+// Projekt-Referenz aus der URL → Schlüssel, unter dem Supabase die Sitzung im
+// localStorage ablegt. Damit können wir OHNE Laden der Bibliothek prüfen, ob
+// überhaupt jemand angemeldet ist (spart auf den meisten Seiten den Download).
+function projectRef() {
+  try { return new URL(SUPABASE_URL).hostname.split('.')[0]; } catch (_) { return ''; }
+}
+export function hasStoredSession() {
+  if (!AUTH_CONFIGURED) return false;
+  try {
+    const key = `sb-${projectRef()}-auth-token`;
+    return !!localStorage.getItem(key);
+  } catch (_) { return false; }
+}
+
+// Lokales UMD-Build per Script-Tag laden (einmalig) → window.supabase.
+function loadLib() {
+  if (window.supabase?.createClient) return Promise.resolve(window.supabase);
+  if (_libPromise) return _libPromise;
+  _libPromise = new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = SUPABASE_LIB;
+    s.onload = () => window.supabase?.createClient ? resolve(window.supabase) : reject(new Error('supabase global fehlt'));
+    s.onerror = () => reject(new Error('supabase konnte nicht geladen werden'));
+    document.head.appendChild(s);
+  });
+  return _libPromise;
+}
 
 // Supabase-Client bei Bedarf laden (einmalig).
 export async function getClient() {
   if (!AUTH_CONFIGURED) return null;
   if (_client) return _client;
   if (!_clientPromise) {
-    _clientPromise = import(SUPABASE_ESM).then(({ createClient }) => {
-      _client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    _clientPromise = loadLib().then((lib) => {
+      _client = lib.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
         auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true },
       });
       return _client;
@@ -81,6 +112,11 @@ export async function mountAccountHeader() {
   const slot = document.getElementById('account-slot');
   if (!slot) return;
   if (!AUTH_CONFIGURED) { slot.innerHTML = ''; return; }
+  // Ohne gespeicherte Sitzung: nur „Anmelden" zeigen (Bibliothek NICHT laden).
+  if (!hasStoredSession()) {
+    slot.innerHTML = `<a class="btn-account" href="konto.html">Anmelden</a>`;
+    return;
+  }
   const render = async (user) => {
     if (user) {
       const w = await fetchWallet();
